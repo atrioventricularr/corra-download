@@ -1,11 +1,98 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Corra Photobooth</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery</title>
+    <style>
+        /* Setup Dasar: Putih Bersih */
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #ffffff; /* Latar putih polos */
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Container Galeri */
+        .gallery-container {
+            max-width: 1200px;
+            width: 100%;
+            display: grid;
+            /* Membuat grid otomatis: foto akan menyusun sendiri sesuai lebar layar */
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        /* Style per item foto */
+        .gallery-item {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Shadow tipis agar elegan */
+            transition: transform 0.3s ease;
+            background: #f9f9f9;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02); /* Efek zoom dikit saat di-hover */
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            cursor: pointer;
+        }
+
+        /* Responsive untuk HP */
+        @media (max-width: 600px) {
+            .gallery-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 10px;
+            }
+            body { padding: 10px; }
+        }
+    </style>
 </head>
 <body>
-  <h1>Corra Photobooth Download</h1>
-  <p>Kalau kamu lihat ini, GitHub Pages berhasil 🎉</p>
+
+    <div class="gallery-container" id="gallery">
+        </div>
+
+    <script>
+        // FUNGSI UNTUK MENAMPILKAN FOTO
+        // Karena GitHub Pages statis, kita perlu list nama file atau 
+        // menggunakan pola folder jika kamu mengunggahnya secara teratur.
+        
+        async function loadGallery() {
+            const gallery = document.getElementById('gallery');
+            
+            // NOTE: Karena ini di GitHub Pages, script tidak bisa "scan" isi folder sessions secara langsung.
+            // Kamu punya dua pilihan:
+            // 1. Manual masukkan list foto di sini, ATAU
+            // 2. Gunakan script upload kamu untuk meng-update file JSON berisi daftar foto.
+
+            // Contoh simulasi daftar foto (ganti dengan logic upload kamu):
+            const photos = [
+                // 'sessions/foto1.jpg',
+                // 'sessions/foto2.jpg'
+            ];
+
+            if (photos.length === 0) {
+                gallery.innerHTML = '<p style="color:#999; text-align:center; grid-column: 1/-1;">Belum ada foto dalam sesi ini.</p>';
+            }
+
+            photos.forEach(src => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.innerHTML = `<img src="${src}" alt="Photo" onclick="window.open(this.src)">`;
+                gallery.appendChild(item);
+            });
+        }
+
+        window.onload = loadGallery;
+    </script>
 </body>
 </html>
