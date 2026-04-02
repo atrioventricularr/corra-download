@@ -1,166 +1,349 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corra Studio - Gallery</title>
+    <title id="pageTitle">Corra Studio - Gallery</title>
     <style>
-        * { box-sizing: border-box; }
-        body {
+        * {
             margin: 0;
-            padding: 20px;
-            background: #f8f9fa;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, sans-serif;
+            background: #f5f7fb;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
         }
-        h1 {
+
+        /* Header */
+        .header {
             text-align: center;
-            color: #2d3436;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            padding: 20px 0;
         }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #1a1a2e;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .header .sub {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        /* Notice */
+        .notice {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+            color: #856404;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .notice-icon {
+            font-size: 1.4rem;
+        }
+
+        .notice-text {
+            flex: 1;
+        }
+
+        /* Loading */
+        .loader-container {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e0e0e0;
+            border-top-color: #4ac3d3;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* Gallery cards */
+        .gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
         .card {
             background: white;
             border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            padding: 20px;
-            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .card h2 {
-            margin-top: 0;
-            color: #4ac3d3;
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
             font-weight: 600;
+            padding: 20px 20px 0;
+            color: #2d3436;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .card img {
-            max-width: 100%;
-            border-radius: 12px;
-            border: 1px solid #eee;
-            margin: 10px 0;
+
+        .card-title i {
+            font-size: 1.5rem;
         }
+
+        .card-content {
+            padding: 20px;
+        }
+
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
         }
+
         .photo-item {
-            background: #f1f2f6;
-            border-radius: 12px;
-            padding: 10px;
-            text-align: center;
+            background: #f8f9fa;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.2s;
         }
+
+        .photo-item:hover {
+            transform: scale(1.02);
+        }
+
         .photo-item img {
             width: 100%;
-            border-radius: 8px;
-            margin-bottom: 8px;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            display: block;
+            background: #e9ecef;
         }
+
+        .photo-item .info {
+            padding: 12px;
+            text-align: center;
+        }
+
         .btn {
             display: inline-block;
             background: #4ac3d3;
             color: white;
-            padding: 8px 16px;
-            border-radius: 30px;
             text-decoration: none;
-            font-size: 13px;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.85rem;
             font-weight: 500;
-            margin-top: 8px;
-            transition: 0.2s;
+            transition: background 0.2s;
+            border: none;
+            cursor: pointer;
         }
+
         .btn:hover {
             background: #2ecc71;
-            transform: translateY(-2px);
         }
-        .loader {
-            text-align: center;
-            padding: 60px;
-            font-size: 18px;
-            color: #666;
+
+        .full-img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        .error {
+
+        .error-message {
             text-align: center;
-            padding: 60px;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 20px;
             color: #e74c3c;
         }
-        @media (max-width: 600px) {
-            .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-            body { padding: 10px; }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #888;
+            font-size: 0.8rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        @media (max-width: 640px) {
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container" id="galleryContainer">
-        <div class="loader">📸 Loading your memories...</div>
+    <div class="container">
+        <div class="header">
+            <h1 id="brandName">CORRA STUDIO</h1>
+            <div class="sub">Your memories are just a click away</div>
+        </div>
+
+        <div id="galleryContainer">
+            <div class="loader-container">
+                <div class="spinner"></div>
+                <div class="loader-text">Loading your photos...</div>
+            </div>
+        </div>
+
+        <footer>
+            <p>⚠️ Photos will be automatically deleted after 7 days. Please download them as soon as possible.</p>
+            <p style="margin-top: 8px;">&copy; 2026 Corra Studio Photobooth</p>
+        </footer>
     </div>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const sessionId = urlParams.get('sid');
         const brand = urlParams.get('brand') || 'CORRA STUDIO';
-        const rawsCount = parseInt(urlParams.get('raws')) || 0;
+        const rawCount = parseInt(urlParams.get('raws')) || 0;
+
+        // Set judul dan brand
+        document.title = `${brand} - Gallery`;
+        document.getElementById('brandName').innerText = brand.toUpperCase();
+
+        const galleryContainer = document.getElementById('galleryContainer');
 
         if (!sessionId) {
-            document.getElementById('galleryContainer').innerHTML = 
-                '<div class="error">❌ Link gallery tidak valid. Tidak ada session ID.</div>';
+            galleryContainer.innerHTML = `
+                <div class="error-message">
+                    <h2>❌ Invalid Link</h2>
+                    <p>No session ID provided. Please use the QR code from the photobooth.</p>
+                </div>
+            `;
         } else {
             const baseUrl = `https://atrioventricularr.github.io/corra-download/sessions/${sessionId}/`;
-            let html = `<h1>✨ ${escapeHtml(brand)} ✨</h1>`;
+            let html = '<div class="gallery">';
 
-            // 1. Foto dengan frame
+            // 1. Frame photo (final composed)
             html += `
                 <div class="card">
-                    <h2>📸 FINAL PHOTO</h2>
-                    <img src="${baseUrl}frame.png" alt="Frame" onerror="this.src='https://via.placeholder.com/400x300?text=No+Frame'">
-                    <br>
-                    <a href="${baseUrl}frame.png" class="btn" download>⬇️ DOWNLOAD</a>
-                </div>`;
+                    <div class="card-title">
+                        <i>🖼️</i> Final Photo
+                    </div>
+                    <div class="card-content">
+                        <img class="full-img" id="frameImg" src="${baseUrl}frame.png" alt="Frame photo" onerror="this.src='https://via.placeholder.com/800x600?text=No+Frame+Image'">
+                        <div style="text-align: center; margin-top: 12px;">
+                            <a href="${baseUrl}frame.png" class="btn" download>⬇️ Download Full Resolution</a>
+                        </div>
+                    </div>
+                </div>
+            `;
 
-            // 2. GIF
+            // 2. GIF (if exists)
             html += `
-                <div class="card">
-                    <h2>🎬 ANIMATED GIF</h2>
-                    <img src="${baseUrl}gif.gif" alt="GIF" onerror="this.style.display='none'">
-                    <br>
-                    <a href="${baseUrl}gif.gif" class="btn" download>⬇️ DOWNLOAD GIF</a>
-                </div>`;
+                <div class="card" id="gifCard" style="display: none;">
+                    <div class="card-title">
+                        <i>🎬</i> Animated GIF
+                    </div>
+                    <div class="card-content">
+                        <img class="full-img" id="gifImg" src="" alt="GIF">
+                        <div style="text-align: center; margin-top: 12px;">
+                            <a id="gifLink" href="" class="btn" download>⬇️ Download GIF</a>
+                        </div>
+                    </div>
+                </div>
+            `;
 
-            // 3. Raw photos
-            if (rawsCount > 0) {
-                html += `<div class="card">
-                            <h2>📷 INDIVIDUAL PHOTOS</h2>
+            // 3. Individual photos
+            if (rawCount > 0) {
+                html += `
+                    <div class="card">
+                        <div class="card-title">
+                            <i>📸</i> Individual Photos
+                        </div>
+                        <div class="card-content">
                             <div class="grid" id="rawGrid"></div>
-                        </div>`;
+                        </div>
+                    </div>
+                `;
             } else {
-                html += `<div class="card"><h2>📷 INDIVIDUAL PHOTOS</h2><p>No individual photos.</p></div>`;
+                html += `
+                    <div class="card">
+                        <div class="card-title">
+                            <i>📸</i> Individual Photos
+                        </div>
+                        <div class="card-content">
+                            <p style="color:#888;">No individual photos available.</p>
+                        </div>
+                    </div>
+                `;
             }
 
-            document.getElementById('galleryContainer').innerHTML = html;
+            html += '</div>';
+            galleryContainer.innerHTML = html;
 
-            // Isi raw grid
-            if (rawsCount > 0) {
+            // Cek keberadaan GIF (coba load)
+            const gifImg = document.getElementById('gifImg');
+            const gifCard = document.getElementById('gifCard');
+            const gifLink = document.getElementById('gifLink');
+            const gifSrc = `${baseUrl}gif.gif`;
+            gifImg.src = gifSrc;
+            gifLink.href = gifSrc;
+            gifImg.onload = () => {
+                gifCard.style.display = 'block';
+            };
+            gifImg.onerror = () => {
+                gifCard.style.display = 'none';
+            };
+
+            // Generate individual photos grid
+            if (rawCount > 0) {
                 const rawGrid = document.getElementById('rawGrid');
-                for (let i = 1; i <= rawsCount; i++) {
+                for (let i = 1; i <= rawCount; i++) {
                     const imgSrc = `${baseUrl}raw-${i}.png`;
                     const item = document.createElement('div');
                     item.className = 'photo-item';
                     item.innerHTML = `
-                        <img src="${imgSrc}" alt="Raw ${i}" onerror="this.src='https://via.placeholder.com/300x200?text=Missing'">
-                        <a href="${imgSrc}" class="btn" download>⬇️ PHOTO ${i}</a>
+                        <img src="${imgSrc}" alt="Raw ${i}" onerror="this.src='https://via.placeholder.com/300x300?text=Missing'">
+                        <div class="info">
+                            <a href="${imgSrc}" class="btn" download>⬇️ Photo ${i}</a>
+                        </div>
                     `;
                     rawGrid.appendChild(item);
                 }
             }
-        }
 
-        function escapeHtml(str) {
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
+            // Optional: Add a notice about auto-deletion (already in footer)
         }
     </script>
 </body>
