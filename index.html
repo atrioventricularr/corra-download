@@ -3,96 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Gallery</title>
+    <title>Corra Studio - Gallery</title>
     <style>
-        /* Setup Dasar: Putih Bersih */
+        * { box-sizing: border-box; }
         body {
             margin: 0;
             padding: 20px;
-            background-color: #ffffff; /* Latar putih polos */
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
+            background: #f8f9fa;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
-
-        /* Container Galeri */
-        .gallery-container {
-            max-width: 1200px;
-            width: 100%;
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #2d3436;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            padding: 20px;
+            text-align: center;
+        }
+        .card h2 {
+            margin-top: 0;
+            color: #4ac3d3;
+            font-weight: 600;
+        }
+        .card img {
+            max-width: 100%;
+            border-radius: 12px;
+            border: 1px solid #eee;
+            margin: 10px 0;
+        }
+        .grid {
             display: grid;
-            /* Membuat grid otomatis: foto akan menyusun sendiri sesuai lebar layar */
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 15px;
+            margin-top: 15px;
         }
-
-        /* Style per item foto */
-        .gallery-item {
+        .photo-item {
+            background: #f1f2f6;
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+        }
+        .photo-item img {
             width: 100%;
             border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Shadow tipis agar elegan */
-            transition: transform 0.3s ease;
-            background: #f9f9f9;
+            margin-bottom: 8px;
         }
-
-        .gallery-item:hover {
-            transform: scale(1.02); /* Efek zoom dikit saat di-hover */
+        .btn {
+            display: inline-block;
+            background: #4ac3d3;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 8px;
+            transition: 0.2s;
         }
-
-        .gallery-item img {
-            width: 100%;
-            height: auto;
-            display: block;
-            cursor: pointer;
+        .btn:hover {
+            background: #2ecc71;
+            transform: translateY(-2px);
         }
-
-        /* Responsive untuk HP */
+        .loader {
+            text-align: center;
+            padding: 60px;
+            font-size: 18px;
+            color: #666;
+        }
+        .error {
+            text-align: center;
+            padding: 60px;
+            color: #e74c3c;
+        }
         @media (max-width: 600px) {
-            .gallery-container {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 10px;
-            }
+            .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
             body { padding: 10px; }
         }
     </style>
 </head>
 <body>
-
-    <div class="gallery-container" id="gallery">
-        </div>
+    <div class="container" id="galleryContainer">
+        <div class="loader">📸 Loading your memories...</div>
+    </div>
 
     <script>
-        // FUNGSI UNTUK MENAMPILKAN FOTO
-        // Karena GitHub Pages statis, kita perlu list nama file atau 
-        // menggunakan pola folder jika kamu mengunggahnya secara teratur.
-        
-        async function loadGallery() {
-            const gallery = document.getElementById('gallery');
-            
-            // NOTE: Karena ini di GitHub Pages, script tidak bisa "scan" isi folder sessions secara langsung.
-            // Kamu punya dua pilihan:
-            // 1. Manual masukkan list foto di sini, ATAU
-            // 2. Gunakan script upload kamu untuk meng-update file JSON berisi daftar foto.
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('sid');
+        const brand = urlParams.get('brand') || 'CORRA STUDIO';
+        const rawsCount = parseInt(urlParams.get('raws')) || 0;
 
-            // Contoh simulasi daftar foto (ganti dengan logic upload kamu):
-            const photos = [
-                // 'sessions/foto1.jpg',
-                // 'sessions/foto2.jpg'
-            ];
+        if (!sessionId) {
+            document.getElementById('galleryContainer').innerHTML = 
+                '<div class="error">❌ Link gallery tidak valid. Tidak ada session ID.</div>';
+        } else {
+            const baseUrl = `https://atrioventricularr.github.io/corra-download/sessions/${sessionId}/`;
+            let html = `<h1>✨ ${escapeHtml(brand)} ✨</h1>`;
 
-            if (photos.length === 0) {
-                gallery.innerHTML = '<p style="color:#999; text-align:center; grid-column: 1/-1;">Belum ada foto dalam sesi ini.</p>';
+            // 1. Foto dengan frame
+            html += `
+                <div class="card">
+                    <h2>📸 FINAL PHOTO</h2>
+                    <img src="${baseUrl}frame.png" alt="Frame" onerror="this.src='https://via.placeholder.com/400x300?text=No+Frame'">
+                    <br>
+                    <a href="${baseUrl}frame.png" class="btn" download>⬇️ DOWNLOAD</a>
+                </div>`;
+
+            // 2. GIF
+            html += `
+                <div class="card">
+                    <h2>🎬 ANIMATED GIF</h2>
+                    <img src="${baseUrl}gif.gif" alt="GIF" onerror="this.style.display='none'">
+                    <br>
+                    <a href="${baseUrl}gif.gif" class="btn" download>⬇️ DOWNLOAD GIF</a>
+                </div>`;
+
+            // 3. Raw photos
+            if (rawsCount > 0) {
+                html += `<div class="card">
+                            <h2>📷 INDIVIDUAL PHOTOS</h2>
+                            <div class="grid" id="rawGrid"></div>
+                        </div>`;
+            } else {
+                html += `<div class="card"><h2>📷 INDIVIDUAL PHOTOS</h2><p>No individual photos.</p></div>`;
             }
 
-            photos.forEach(src => {
-                const item = document.createElement('div');
-                item.className = 'gallery-item';
-                item.innerHTML = `<img src="${src}" alt="Photo" onclick="window.open(this.src)">`;
-                gallery.appendChild(item);
-            });
+            document.getElementById('galleryContainer').innerHTML = html;
+
+            // Isi raw grid
+            if (rawsCount > 0) {
+                const rawGrid = document.getElementById('rawGrid');
+                for (let i = 1; i <= rawsCount; i++) {
+                    const imgSrc = `${baseUrl}raw-${i}.png`;
+                    const item = document.createElement('div');
+                    item.className = 'photo-item';
+                    item.innerHTML = `
+                        <img src="${imgSrc}" alt="Raw ${i}" onerror="this.src='https://via.placeholder.com/300x200?text=Missing'">
+                        <a href="${imgSrc}" class="btn" download>⬇️ PHOTO ${i}</a>
+                    `;
+                    rawGrid.appendChild(item);
+                }
+            }
         }
 
-        window.onload = loadGallery;
+        function escapeHtml(str) {
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
     </script>
 </body>
 </html>
