@@ -23,7 +23,6 @@
             margin: 0 auto;
         }
 
-        /* Header */
         .header {
             text-align: center;
             margin-bottom: 32px;
@@ -44,7 +43,6 @@
             margin-top: 6px;
         }
 
-        /* Loading */
         .loader-wrapper {
             display: flex;
             flex-direction: column;
@@ -75,7 +73,6 @@
             font-size: 14px;
         }
 
-        /* Gallery */
         .gallery {
             display: flex;
             flex-direction: column;
@@ -124,7 +121,6 @@
             background: #f0f0f0;
         }
 
-        /* GIF specific - keep aspect ratio, no forced ratio */
         .gif-card img {
             aspect-ratio: auto;
             object-fit: contain;
@@ -202,7 +198,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         const sessionId = urlParams.get('sid');
         let brand = urlParams.get('brand') || 'CORRA STUDIO';
-        const rawCount = parseInt(urlParams.get('raws')) || 0;
+        const rawCountParam = parseInt(urlParams.get('raws')) || 0;
 
         if (!sessionId) {
             document.getElementById('loader').innerHTML = '<div class="loader-wrapper" style="color:#aa0000;">Invalid gallery link. No session ID.</div>';
@@ -222,8 +218,10 @@
                 const frameExists = await imageExists(baseUrl + 'frame.png');
                 const gifExists = await imageExists(baseUrl + 'gif.gif');
                 
+                // Cek raw photos: tidak hanya mengandalkan parameter raws, tapi juga coba sampai 20
                 const rawPhotos = [];
-                for (let i = 1; i <= rawCount; i++) {
+                const maxRaw = Math.max(rawCountParam, 20); // cek hingga 20 atau parameter
+                for (let i = 1; i <= maxRaw; i++) {
                     const exists = await imageExists(baseUrl + `raw-${i}.png`);
                     if (exists) rawPhotos.push(i);
                 }
